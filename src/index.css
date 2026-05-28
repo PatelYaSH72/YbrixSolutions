@@ -1,0 +1,612 @@
+@import "tailwindcss";
+
+/* --- Core Custom variables mapped to Tailwind v4 Theme --- */
+@theme {
+    --color-bg-black: #050505;
+    --color-bg-dark-gray: #0d0d0d;
+    --color-bg-card: rgba(13, 13, 13, 0.7);
+    --color-orange-primary: #ff5500;
+    --color-orange-secondary: #ff6600;
+    --color-orange-glow: rgba(255, 85, 0, 0.25);
+    --color-orange-glow-heavy: rgba(255, 85, 0, 0.6);
+    --color-text-white: #ffffff;
+    --color-text-muted: #8c8c8c;
+    --color-text-dark: #404040;
+    --color-border-glass: rgba(255, 85, 0, 0.12);
+    --color-border-glass-hover: rgba(255, 85, 0, 0.35);
+    
+    --font-sans: 'Inter', sans-serif;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-syne: 'Syne', sans-serif;
+    
+    --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-elastic: cubic-bezier(0.25, 1, 0.5, 1.25);
+
+    --animate-marquee-loop: marqueeLoop 22s linear infinite;
+    --animate-testimonials-auto-scroll: testimonialsAutoScroll 45s linear infinite;
+    --animate-bounce-right: bounceRight 1.5s infinite;
+
+    @keyframes marqueeLoop {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    @keyframes testimonialsAutoScroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-33.33%); }
+    }
+    @keyframes bounceRight {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(5px); }
+    }
+}
+
+/* --- Premium Base Overrides & Resets --- */
+html {
+    scroll-behavior: auto; /* Disabled for Lenis Smooth Scroll compatibility */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-orange-primary) var(--color-bg-black);
+    background-color: var(--color-bg-black);
+    color: var(--color-text-white);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+}
+
+body {
+    background-color: var(--color-bg-black);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Premium Scrollbar --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-bg-black);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-orange-primary);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-orange-secondary);
+}
+
+/* --- Custom Cursor Physics --- */
+.custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+.cursor-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-orange-primary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+    mix-blend-mode: difference;
+}
+.cursor-glow {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-orange-primary);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 15px var(--color-orange-glow);
+    transition: transform 0.15s cubic-bezier(0.1, 0.8, 0.3, 1), width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+}
+.cursor-text {
+    position: absolute;
+    color: var(--color-text-white);
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s var(--transition-smooth);
+    pointer-events: none;
+}
+
+/* Cursor States on Hover */
+body.hover-interactive .cursor-dot {
+    width: 4px;
+    height: 4px;
+    background-color: var(--color-text-white);
+}
+body.hover-interactive .cursor-glow {
+    width: 70px;
+    height: 70px;
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+body.hover-card-link .cursor-dot {
+    width: 60px;
+    height: 60px;
+    background-color: var(--color-orange-primary);
+    mix-blend-mode: normal;
+    z-index: -1;
+}
+body.hover-card-link .cursor-text {
+    transform: translate(-50%, -50%) scale(1);
+}
+body.hover-card-link .cursor-glow {
+    opacity: 0;
+}
+
+/* --- Base Typography resets --- */
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+}
+
+/* --- Custom Utilities defined with Tailwind v4 syntax --- */
+@utility text-orange {
+    color: var(--color-orange-primary) !important;
+}
+@utility font-space {
+    font-family: var(--font-heading) !important;
+}
+@utility font-syne {
+    font-family: var(--font-syne) !important;
+}
+
+/* --- Full-Screen Cinematic Website Loader --- */
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.loader-curtain {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background-color: var(--color-bg-black);
+    z-index: 1;
+}
+.loader-curtain.left { left: 0; border-right: 1px solid rgba(255, 85, 0, 0.05); }
+.loader-curtain.right { right: 0; border-left: 1px solid rgba(255, 85, 0, 0.05); }
+
+.loader-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Y Logo Builder Animation */
+.logo-builder {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 24px;
+}
+.logo-block {
+    position: absolute;
+    background-color: var(--color-orange-primary);
+    box-shadow: 0 0 20px var(--color-orange-glow-heavy);
+    opacity: 0;
+}
+.block-top-left {
+    width: 25px;
+    height: 45px;
+    top: 5px;
+    left: 20px;
+    transform: skewY(25deg);
+}
+.block-top-right {
+    width: 25px;
+    height: 45px;
+    top: 5px;
+    right: 20px;
+    transform: skewY(-25deg);
+}
+.block-middle {
+    width: 25px;
+    height: 30px;
+    top: 40px;
+    left: 37.5px;
+}
+.block-bottom {
+    width: 25px;
+    height: 25px;
+    top: 72px;
+    left: 37.5px;
+}
+
+.loader-brand {
+    font-family: var(--font-syne);
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
+}
+.loader-brand span.word {
+    opacity: 0;
+    transform: translateY(15px);
+    display: inline-block;
+}
+.loader-brand span.orange {
+    color: var(--color-orange-primary);
+}
+.loader-subtitle {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+/* --- Header / Navigation custom elements --- */
+@utility nav-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+    padding: 6px 0;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background-color: var(--color-orange-primary);
+        transition: width 0.3s var(--transition-smooth);
+    }
+    &:hover {
+        color: var(--color-text-white);
+        &::after {
+            width: 100%;
+        }
+    }
+}
+
+/* --- Custom Premium Buttons --- */
+@utility btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 36px;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0px; /* Modular block style */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+@utility btn-primary {
+    background-color: var(--color-orange-primary);
+    color: var(--color-text-white);
+    border: 1px solid var(--color-orange-primary);
+    &:hover {
+        background-color: var(--color-bg-black);
+        color: var(--color-orange-primary);
+    }
+}
+@utility btn-secondary {
+    background-color: transparent;
+    color: var(--color-text-white);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    &:hover {
+        border-color: var(--color-orange-primary);
+        color: var(--color-orange-primary);
+    }
+}
+@utility btn-tertiary {
+    background-color: transparent;
+    color: var(--color-text-muted);
+    border: none;
+    padding: 16px 20px;
+    position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 12px;
+        left: 20px;
+        width: 50%;
+        height: 2px;
+        background-color: var(--color-text-muted);
+        transition: width 0.3s var(--transition-smooth), background-color 0.3s ease;
+    }
+    &:hover {
+        color: var(--color-text-white);
+        &::after {
+            width: 80%;
+            background-color: var(--color-orange-primary);
+        }
+    }
+}
+@utility btn-glow {
+    box-shadow: 0 0 25px var(--color-orange-glow);
+    &:hover {
+        box-shadow: 0 0 35px var(--color-orange-glow-heavy);
+    }
+}
+@utility btn-arrow {
+    transition: transform 0.3s var(--transition-smooth);
+    .btn:hover & {
+        transform: translateX(4px);
+    }
+}
+
+/* --- Background layouts & decoration elements --- */
+@utility grid-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 60px 60px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 85, 0, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 85, 0, 0.02) 1px, transparent 1px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+@utility ambient-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 85, 0, 0.06) 0%, transparent 70%);
+    top: 10%;
+    right: 5%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Parallax 3D Stack Cards */
+.parallax-card {
+    position: absolute;
+    width: 100%;
+    height: 260px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-glass);
+    backdrop-filter: blur(12px);
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.4s var(--transition-smooth), transform 0.1s ease;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+}
+.parallax-card:hover {
+    border-color: var(--color-border-glass-hover);
+}
+.card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 100% 100%, rgba(255, 85, 0, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+.card-shopify {
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+.card-ai {
+    top: 100px;
+    left: 20px;
+    z-index: 3;
+    background: rgba(20, 20, 20, 0.75);
+    border-color: rgba(255, 85, 0, 0.2);
+}
+.card-wordpress {
+    top: 200px;
+    left: -20px;
+    z-index: 4;
+}
+
+@media (max-width: 1024px) {
+    .parallax-card {
+        position: relative;
+        top: 0 !important;
+        left: 0 !important;
+        height: auto;
+        width: 100%;
+        transform: none !important;
+    }
+}
+
+/* --- Blueprint Grid Animation Box (Timeline) --- */
+@utility blueprint-animation-box {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    border: 1px solid rgba(255, 85, 0, 0.1);
+    background: rgba(255, 85, 0, 0.01);
+    overflow: hidden;
+}
+@utility blueprint-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: 20px 20px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 85, 0, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 85, 0, 0.04) 1px, transparent 1px);
+}
+@utility blueprint-active-block {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1.5px solid var(--color-orange-primary);
+    box-shadow: 0 0 15px var(--color-orange-glow);
+    top: 40px;
+    left: 40px;
+    transition: all 0.6s var(--transition-smooth);
+}
+
+/* --- Timeline Glow Path --- */
+@utility timeline-glow-path {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+}
+@utility timeline-glow-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to bottom, var(--color-orange-primary), var(--color-orange-secondary));
+    box-shadow: 0 0 8px var(--color-orange-primary);
+}
+
+/* --- Service Card Glow --- */
+@utility service-card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 0% 0%, rgba(255, 85, 0, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* --- Final Cinematic CTA Glow Core --- */
+@utility cta-glowing-core {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 85, 0, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* --- WhatsApp Sticky Widget --- */
+@utility whatsapp-sticky-widget {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 60px;
+    height: 60px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 80;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+    text-decoration: none;
+    transition: transform 0.3s var(--transition-elastic), background-color 0.3s ease;
+    
+    &:hover {
+        transform: scale(1.1);
+        background-color: #128c7e;
+    }
+}
+
+@utility widget-tooltip {
+    position: absolute;
+    right: 76px;
+    background-color: var(--color-bg-dark-gray);
+    color: var(--color-text-white);
+    border: 1px solid var(--color-border-glass);
+    padding: 8px 16px;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    border-radius: 0px;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.3s ease, transform 0.3s var(--transition-smooth);
+    pointer-events: none;
+    
+    .whatsapp-sticky-widget:hover & {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* --- Process Timeline Step Custom Elements --- */
+.process-step {
+    position: relative;
+    margin-bottom: 120px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    opacity: 0.35;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s var(--transition-smooth);
+    
+    &.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.step-badge {
+    position: absolute;
+    left: -80px;
+    top: -5px;
+    width: 42px;
+    height: 42px;
+    background: var(--color-bg-black);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+    
+    .process-step.active & {
+        border-color: var(--color-orange-primary);
+        color: var(--color-orange-primary);
+        box-shadow: 0 0 15px var(--color-orange-glow);
+    }
+    
+    @media (max-width: 1024px) {
+        left: -50px;
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+}
